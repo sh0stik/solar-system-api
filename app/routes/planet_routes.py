@@ -17,3 +17,20 @@ def get_all_planets():
             }
         )
     return planets_response
+
+@planets_bp.get("/<planet_id>")
+def get_one_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return {"message": f"planet {planet_id} invalid"}, 400   
+    
+    for planet in planets:
+        if planet.id == planet_id:
+            return {
+                "id" : planet.id,
+                "name" : planet.name,
+                "description" : planet.description
+            }
+
+    return {"message": f"planet {planet_id} not found"}, 404
