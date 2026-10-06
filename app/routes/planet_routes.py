@@ -13,7 +13,8 @@ def get_all_planets():
             {
                 "id" : planet.id,
                 "name" : planet.name,
-                "description" : planet.description
+                "description" : planet.description,
+                "color": planet.color
             }
         )
     return planets_response
@@ -24,7 +25,8 @@ def get_one_planet(planet_id):
     return {
         "id": planet.id,
         "name": planet.name,
-        "description": planet.description
+        "description": planet.description,
+        "color": planet.color
     }
 
 def validate_planet(planet_id):
