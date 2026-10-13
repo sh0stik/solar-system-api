@@ -1,5 +1,7 @@
 from flask import Blueprint, abort, make_response, request
+
 from app.models.planet import Planet
+
 from ..db import db
 
 planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
@@ -9,11 +11,12 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 @planets_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    name = request_body["name"]
-    description = request_body["description"]
-    color = request_body["color"]
+    
+    new_planet = Planet()
+    new_planet.name = request_body["name"]
+    new_planet.description = request_body["description"]
+    new_planet.color = request_body["color"]
 
-    new_planet = Planet(name=name, description=description, color=color)
     db.session.add(new_planet)
     db.session.commit()
 
@@ -24,6 +27,7 @@ def create_planet():
         "color": new_planet.color,
     }
     return response, 201
+
 
 # READ
 @planets_bp.get("")
@@ -55,8 +59,15 @@ def get_one_planet(planet_id):
         "color": planet.color,
     }
 
-# HELPER FUNCTION FOR ERROR HANDLING
 
+# UPDATE
+# Write your update route here...
+
+# DELETE
+# Write your delete route here...
+
+
+# HELPER FUNCTION FOR ERROR HANDLING
 def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
@@ -69,20 +80,3 @@ def validate_planet(planet_id):
     if planet is None:
         abort(make_response({"message": f"planet {planet_id} not found"}, 404))
     return planet
-
-# UPDATE
-# Write your update route here...
-
-# DELETE
-# Write your delete route here...
-
-# def validate_planet(planet_id):
-#     try:
-#         planet_id = int(planet_id)
-#     except ValueError:
-#         abort(make_response({"message": f"planet {planet_id} invalid"}, 400))
-
-#     for planet in planets:
-#         if planet.id == planet_id:
-#             return planet
-#     abort(make_response({"message": f"planet {planet_id} not found"}, 404))
