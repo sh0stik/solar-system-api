@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, make_response, request
+from flask import Blueprint, abort, make_response, request, Response
 
 from app.models.planet import Planet
 
@@ -61,10 +61,28 @@ def get_one_planet(planet_id):
 
 
 # UPDATE
-# Write your update route here...
+@planets_bp.put("/<planet_id>")
+def update_planet(planet_id):
+    planet = validate_planet(planet_id)
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.color = request_body["color"] 
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
 
 # DELETE
-# Write your delete route here...
+@planets_bp.delete("/<planet_id>")
+def delete_planet(planet_id):
+    planet = validate_planet(planet_id)
+    db.session.delete(planet)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
 
 
 # HELPER FUNCTION FOR ERROR HANDLING
