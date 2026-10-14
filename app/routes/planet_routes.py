@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, make_response, request
+from flask import Blueprint, abort, make_response, request, Response
 
 from app.models.planet import Planet
 
@@ -14,6 +14,8 @@ def create_planet():
     name = request_body["name"]
     description = request_body["description"]
     color = request_body["color"]
+
+    new_planet = Planet(name=name, description=description, color=color)
 
     new_planet = Planet(name=name, description=description, color=color)
     db.session.add(new_planet)
@@ -60,10 +62,28 @@ def get_one_planet(planet_id):
 
 
 # UPDATE
-# Write your update route here...
+@planets_bp.put("/<planet_id>")
+def update_planet(planet_id):
+    planet = validate_planet(planet_id)
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.color = request_body["color"] 
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
 
 # DELETE
-# Write your delete route here...
+@planets_bp.delete("/<planet_id>")
+def delete_planet(planet_id):
+    planet = validate_planet(planet_id)
+    db.session.delete(planet)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
 
 # HELPER FUNCTION FOR ERROR HANDLING
 
@@ -77,6 +97,6 @@ def validate_planet(planet_id):
     query = db.select(Planet).where(Planet.id == planet_id)
     planet = db.session.execute(query).scalar()
 
-    if planet is None:
+    if not planet:
         abort(make_response({"message": f"planet {planet_id} not found"}, 404))
     return planet
