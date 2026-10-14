@@ -11,12 +11,11 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 @planets_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    
-    new_planet = Planet()
-    new_planet.name = request_body["name"]
-    new_planet.description = request_body["description"]
-    new_planet.color = request_body["color"]
+    name = request_body["name"]
+    description = request_body["description"]
+    color = request_body["color"]
 
+    new_planet = Planet(name=name, description=description, color=color)
     db.session.add(new_planet)
     db.session.commit()
 
@@ -66,8 +65,9 @@ def get_one_planet(planet_id):
 # DELETE
 # Write your delete route here...
 
-
 # HELPER FUNCTION FOR ERROR HANDLING
+
+
 def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
