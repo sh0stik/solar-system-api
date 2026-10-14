@@ -16,8 +16,6 @@ def create_planet():
     color = request_body["color"]
 
     new_planet = Planet(name=name, description=description, color=color)
-
-    new_planet = Planet(name=name, description=description, color=color)
     db.session.add(new_planet)
     db.session.commit()
 
