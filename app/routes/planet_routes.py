@@ -11,11 +11,11 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 @planets_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    
-    new_planet = Planet()
-    new_planet.name = request_body["name"]
-    new_planet.description = request_body["description"]
-    new_planet.color = request_body["color"]
+    name = request_body["name"]
+    description = request_body["description"]
+    color = request_body["color"]
+
+    new_planet = Planet(name=name, description=description, color=color)
 
     db.session.add(new_planet)
     db.session.commit()
@@ -84,7 +84,6 @@ def delete_planet(planet_id):
     return Response(status=204, mimetype="application/json")
 
 
-
 # HELPER FUNCTION FOR ERROR HANDLING
 def validate_planet(planet_id):
     try:
@@ -95,6 +94,6 @@ def validate_planet(planet_id):
     query = db.select(Planet).where(Planet.id == planet_id)
     planet = db.session.execute(query).scalar()
 
-    if planet is None:
+    if not planet:
         abort(make_response({"message": f"planet {planet_id} not found"}, 404))
     return planet
