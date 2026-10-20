@@ -8,17 +8,19 @@ def test_get_planets_with_no_records(client):
     assert response_body == []
 
 def test_get_one_planet_return_successfully(client, three_planets):
+    # Arrange
+    expected_planet = three_planets[0]
+    
     # Act
     response = client.get("/planets/1")
     planet = response.get_json()
 
     # Assert
     assert response.status_code == 200
-    assert planet["id"] == 1
-    assert planet["name"] == "Mars"
-    assert planet["description"] == "The red planet."
-    assert planet["color"] == "Red"
-    
+    assert planet["id"] == expected_planet.id
+    assert planet["name"] == expected_planet.name
+    assert planet["description"] == expected_planet.description
+    assert planet["color"] == expected_planet.color
 
 def test_get_one_planet_return_404(client):
     # Act 
@@ -35,18 +37,34 @@ def test_get_all_planets(client, three_planets):
     # Assert
     assert response.status_code == 200
     assert len(planets) == 3
+
     assert planets == [
-        {"id": 1,
-        "name": "Mars",
-        "description": "The red planet.",
-        "color": "Red"},
-        {"id": 2,
-        "name": "Mercury",
-        "description": "The smallest planet in our solar system.",
-        "color": "Gray"},
-        {"id": 3,
-        "name": "Venus",
-        "description": "The hottest planet in our solar system.",
-        "color": "Yellow"}
-        ]
-    
+        {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "color": planet.color,
+        }
+        for planet in three_planets
+    ]
+
+def test_create_planet_successfully(client):
+    # Arrange
+    expected_planet = {
+        "name": "Earth",
+        "description": "Our home planet.",
+        "color": "Blue"
+    }
+
+    # Act
+    response = client.post("/planets", json=expected_planet)
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert response_body["id"] == 1
+    assert response_body["name"] == expected_planet["name"]
+    assert response_body["description"] == expected_planet["description"]
+    assert response_body["color"] == expected_planet["color"]
+
+

@@ -34,10 +34,11 @@ def client(app):
 
 @pytest.fixture
 def three_planets(app):
-    # Arrange
     mars = Planet(name="Mars", description="The red planet.", color="Red")
     mercury = Planet(name="Mercury", description="The smallest planet in our solar system.", color="Gray")
     venus = Planet(name="Venus", description="The hottest planet in our solar system.", color="Yellow")
 
     db.session.add_all([mars, mercury, venus])
     db.session.commit()
+
+    return [mars, mercury, venus]
