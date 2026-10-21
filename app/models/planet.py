@@ -20,6 +20,6 @@ class Planet(db.Model):
     @classmethod
     def from_dict(cls, planet_data):
         new_planet = cls(name=planet_data["name"],
-                         description=planet_data["description"],
-                         color=planet_data["color"])
+                        description=planet_data["description"],
+                        color=planet_data["color"])
         return new_planet
