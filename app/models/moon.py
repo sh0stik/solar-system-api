@@ -27,11 +27,11 @@ class Moon(db.Model):
         return moon_as_dict
 
     @classmethod
-    def from_dict(cls, planet_data):
-        planet_id = planet_data.get("planet_id")
+    def from_dict(cls, moon_data):
+        planet_id = moon_data.get("planet_id")
 
-        new_moon = cls(name=planet_data["name"],
-                         description=planet_data["description"],
-                         size=planet_data["size"],
-                         planet_id=planet_id)
+        new_moon = cls(name=moon_data["name"],
+                       description=moon_data["description"],
+                       size=moon_data["size"],
+                       planet_id=planet_id)
         return new_moon
