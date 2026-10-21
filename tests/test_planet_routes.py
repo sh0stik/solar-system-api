@@ -68,3 +68,13 @@ def test_create_planet_successfully(client):
     assert response_body["color"] == expected_planet["color"]
 
 
+def test_moon_to_dict_includes_planet_name(one_moon):
+    result = one_moon.to_dict()
+ 
+    assert result == {
+        "id": one_moon.id,
+        "name": "Phobos",
+        "description": "Mars's largest moon.",
+        "size": 22,
+        "planet": "Mars",
+    }

@@ -3,6 +3,7 @@ from app import create_app
 from app.db import db
 from flask.signals import request_finished
 from dotenv import load_dotenv
+from app.models.moon import Moon
 from app.models.planet import Planet
 import os
 
@@ -42,3 +43,13 @@ def three_planets(app):
     db.session.commit()
 
     return [mars, mercury, venus]
+
+@pytest.fixture
+def one_moon(three_planets):
+    mars = three_planets[0]
+    phobos = Moon(name="Phobos", description="Mars's largest moon.", size=22, planet=mars)
+
+    db.session.add(phobos)
+    db.session.commit()
+
+    return phobos
