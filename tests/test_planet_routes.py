@@ -70,7 +70,7 @@ def test_create_planet_successfully(client):
 
 def test_moon_to_dict_includes_planet_name(one_moon):
     result = one_moon.to_dict()
- 
+
     assert result == {
         "id": one_moon.id,
         "name": "Phobos",

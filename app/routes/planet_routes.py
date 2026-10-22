@@ -63,4 +63,9 @@ def create_moon_with_planet_id(planet_id):
     return create_model_with_response(Moon, request_body)
 
 
-# Write your nested route for /planets/<planet_id>/moons with the GET method here...
+@bp.get("/<planet_id>/moons")
+def get_all_planet_moons(planet_id):
+    planet = validate_model(Planet, planet_id)
+    moons = [moon.to_dict() for moon in planet.moons]
+
+    return moons
